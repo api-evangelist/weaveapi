@@ -1,0 +1,47 @@
+name: WeaveAPI - OpenAI-compatible AI API Gateway
+description: >-
+  WeaveAPI is an OpenAI-compatible /v1 gateway for calling supported model families (OpenAI, Anthropic, DeepSeek, Qwen,
+  Kimi, GLM, MiniMax) through a clean OpenAI-compatible API. Keep your SDK, change the base URL, and manage keys,
+  balance, usage, and top-ups in a hosted console. Prepaid pay-as-you-go pricing with a $1 signup credit.
+url: https://weaveapi-openai-compatible-ai-api-gateway.apievangelist.com/apis.yml
+created: '2026-07-10'
+modified: '2026-07-10'
+specificationVersion: '0.21'
+tags:
+  - AI
+  - LLM
+  - AI inference
+  - API gateway
+  - aggregator
+  - OpenAI-compatible
+  - developer tools
+  - model routing
+apis:
+  - name: WeaveAPI OpenAI-compatible API
+    description: >-
+      OpenAI-wire-compatible REST API for chat completions, responses, and model catalog. Authenticated with a bearer
+      API key. Also offers an Anthropic/Claude-compatible Messages route on the api.weaveapi.dev host without /v1.
+    humanURL: https://weaveapi.dev/docs/
+    baseURL: https://api.weaveapi.dev/v1
+    tags:
+      - AI
+      - LLM
+      - AI inference
+      - API gateway
+      - aggregator
+      - OpenAI-compatible
+      - developer tools
+      - model routing
+    properties:
+      - type: Documentation
+        url: https://weaveapi.dev/docs/
+      - type: Documentation
+        url: https://weaveapi.dev/pricing/
+maintainers:
+  - FN: WeaveAPI - OpenAI-compatible AI API Gateway
+    url: https://weaveapi.dev/
+generated:
+  by: apis.io/add
+  model: claude-opus-4-8
+  confidence: 85
+  at: '2026-07-10T05:46:24.844Z'
