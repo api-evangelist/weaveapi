@@ -1,0 +1,294 @@
+generated: '2026-08-11'
+method: searched
+source: https://weaveapi.dev/pricing/
+machine_readable_source: https://api.weaveapi.dev/api/pricing
+docs: https://weaveapi.dev/docs/
+
+model: prepaid-credits
+currency: USD
+plan_count: 2
+
+summary: >-
+  WeaveAPI sells one product — a prepaid credit balance spent across every supported model route — and
+  publishes no per-seat or per-month subscription tier. The public pricing page describes two paths:
+  self-serve "Pay as you go" and a "Account review" path for larger accounts that is a contact-support
+  motion, not a priced tier. Neither path publishes a dollar rate on the public site; the docs, the
+  pricing page and the models page all defer to the console Model Marketplace as the source of truth.
+  That marketplace, however, has an UNAUTHENTICATED public projection at /api/pricing, which returns
+  the full callable model list with its price ratios — captured verbatim in weaveapi-model-pricing.json.
+
+plans:
+  - name: Pay as you go
+    id: pay-as-you-go
+    price: null
+    price_note: >-
+      No fixed price. Prepaid credits are purchased in the console and drawn down per request; the
+      rate depends on the model route selected. No published minimum top-up on the public site.
+    currency: USD
+    billing_period: prepaid
+    self_serve: true
+    highlighted: true
+    included:
+      - One shared account balance across all supported model routes
+      - API keys and usage logs in console
+      - Model rates shown in the live Model Marketplace
+      - No separate provider dashboard required for WeaveAPI usage
+      - New accounts include a $1 signup testing credit
+    limits:
+      rate_limits: Standard account limits (no numbers published)
+      api_access: OpenAI-compatible /v1
+      api_keys: Console managed
+      usage_logs: Available in console
+      support: Standard support handoff
+    best_for: Testing, prototypes, apps
+
+  - name: Account review
+    id: account-review
+    price: null
+    price_note: Contact support. Not a priced tier — a review motion for larger usage.
+    currency: USD
+    billing_period: prepaid
+    self_serve: false
+    contact: support@weaveapi.dev
+    included:
+      - Everything in pay as you go
+      - Account-limit review
+      - Support handoff for operational questions
+      - Usage planning discussion
+      - Manual review for larger accounts
+    limits:
+      rate_limits: Account review required
+      model_pricing: Marketplace plus account review
+    best_for: Larger production workloads
+
+signup_credit:
+  amount: 1
+  currency: USD
+  note: New accounts include a $1 signup testing credit.
+
+# Probed verbatim from the unauthenticated gateway config at /api/status
+billing_configuration:
+  method: probed
+  source: https://api.weaveapi.dev/api/status
+  quota_display_type: USD
+  quota_per_unit: 500000
+  display_in_currency: true
+  price: 7.3
+  stripe_unit_price: 8
+  usd_exchange_rate: 7.3
+  note: >-
+    These are the gateway's own top-up/exchange settings as served publicly. `quota_per_unit` (500000)
+    is the internal quota units per one display unit; `price` / `usd_exchange_rate` (7.3) and
+    `stripe_unit_price` (8) are the top-up conversion settings. Payment is taken via Stripe.
+  payment_processor: Stripe
+
+# Price ratios, not dollar amounts — recorded exactly as the provider serves them.
+pricing_model:
+  scheme: ratio
+  note: >-
+    WeaveAPI runs the open-source New API gateway (confirmed by the x-new-api-version and
+    x-oneapi-request-id response headers), which prices per model with a `model_ratio` multiplier for
+    input tokens, a `completion_ratio` multiplier applied on top for output tokens, and a `cache_ratio`
+    for cached input. NO DOLLAR FIGURE PER MODEL IS PUBLISHED ANYWHERE PUBLIC, and this artifact does
+    not compute one — converting a ratio to a rate requires the gateway's base-rate constant, which
+    WeaveAPI does not publish. The ratios below are recorded verbatim so the relative cost of routes is
+    at least comparable.
+  quota_type_0_means: token-metered (as opposed to per-call fixed price)
+  groups:
+    default: Default group
+    vip: VIP group
+  group_ratio:
+    default: 1
+    vip: 1
+  group_note: >-
+    A VIP group exists and is selectable, but its multiplier is 1 — identical to default. No model in
+    the public catalog is restricted to it; every route lists enable_groups [default].
+
+model_catalog:
+  method: probed
+  source: https://api.weaveapi.dev/api/pricing
+  file: weaveapi-model-pricing.json
+  fetched: '2026-08-11'
+  model_count: 19
+  pricing_version: a42d372ccf0b5dd13ecf71203521f9d2
+  supported_endpoint:
+    openai:
+      path: /v1/chat/completions
+      method: POST
+  by_vendor:
+    Alibaba Cloud (Qwen): 7
+    OpenAI: 4
+    Zhipu AI (GLM): 4
+    Moonshot (Kimi): 3
+    MiniMax: 1
+    Anthropic: 0
+    DeepSeek: 0
+  coverage_gap:
+    finding: >-
+      WeaveAPI markets support for "OpenAI, Anthropic, DeepSeek, Qwen, Kimi, GLM and MiniMax" on its
+      homepage, docs, models page and pricing page, and its own gateway registers Anthropic (vendor 9)
+      and DeepSeek (vendor 2) in the vendor table — but the public callable catalog contains ZERO
+      Anthropic routes and ZERO DeepSeek routes. Five of the seven advertised families are callable;
+      two are not, at least not to an unauthenticated reader.
+    caveat: >-
+      This is the UNAUTHENTICATED projection of the catalog. WeaveAPI's docs state that the console and
+      the authenticated /v1/models response are the source of truth and that access is account-specific,
+      so an authenticated account may see routes this probe cannot. Recorded as an observed gap between
+      the public marketing claim and the public catalog, not as a claim about what any account can call.
+    also: >-
+      All 19 routes declare supported_endpoint_types ["openai"] only. None declares "anthropic", even
+      though the gateway exposes a live Anthropic-compatible POST /v1/messages route (401 unauthenticated)
+      and the docs publish a Claude Code setup guide against it.
+  models:
+    - model: gpt-5.6-luna
+      vendor: OpenAI
+      model_ratio: 0.01
+      completion_ratio: 6
+      cache_ratio: 0.1
+      groups: [default]
+      endpoints: [openai]
+    - model: gpt-5.6-terra
+      vendor: OpenAI
+      model_ratio: 0.1
+      completion_ratio: 6
+      cache_ratio: 0.1
+      groups: [default]
+      endpoints: [openai]
+    - model: gpt-5.6-sol
+      vendor: OpenAI
+      model_ratio: 0.25
+      completion_ratio: 6
+      cache_ratio: 0.1
+      groups: [default]
+      endpoints: [openai]
+    - model: gpt-5.5
+      vendor: OpenAI
+      model_ratio: 0.25
+      completion_ratio: 6
+      cache_ratio: 0.1
+      groups: [default]
+      endpoints: [openai]
+    - model: qwen3.6-flash
+      vendor: Alibaba Cloud
+      model_ratio: 0.09
+      completion_ratio: 6.6
+      cache_ratio: 0.1
+      groups: [default]
+      endpoints: [openai]
+    - model: qwen3-coder-next
+      vendor: Alibaba Cloud
+      model_ratio: 0.135
+      completion_ratio: 4.777777777778
+      cache_ratio: 0.1
+      groups: [default]
+      endpoints: [openai]
+    - model: qwen3.5-plus
+      vendor: Alibaba Cloud
+      model_ratio: 0.18
+      completion_ratio: 5.777777777778
+      cache_ratio: 0.1
+      groups: [default]
+      endpoints: [openai]
+    - model: qwen3.6-plus
+      vendor: Alibaba Cloud
+      model_ratio: 0.18
+      completion_ratio: 6.7
+      cache_ratio: 0.1
+      groups: [default]
+      endpoints: [openai]
+    - model: qwen3.7-plus
+      vendor: Alibaba Cloud
+      model_ratio: 0.18
+      completion_ratio: 3.888888888889
+      cache_ratio: 0.1
+      groups: [default]
+      endpoints: [openai]
+    - model: qwen3-coder-plus
+      vendor: Alibaba Cloud
+      model_ratio: 0.35
+      completion_ratio: 4
+      cache_ratio: 0.1
+      groups: [default]
+      endpoints: [openai]
+    - model: qwen3-max-2026-01-23
+      vendor: Alibaba Cloud
+      model_ratio: 0.5
+      completion_ratio: 5.2
+      cache_ratio: 0.1
+      groups: [default]
+      endpoints: [openai]
+    - model: glm-4.7
+      vendor: Zhipu AI
+      model_ratio: 0.27
+      completion_ratio: 3.666666666667
+      cache_ratio: 0.1
+      groups: [default]
+      endpoints: [openai]
+    - model: glm-5.2
+      vendor: Zhipu AI
+      model_ratio: 0.3
+      completion_ratio: 3
+      cache_ratio: 0.166666666667
+      groups: [default]
+      endpoints: [openai]
+    - model: glm-5
+      vendor: Zhipu AI
+      model_ratio: 0.45
+      completion_ratio: 3.2
+      cache_ratio: 0.1
+      groups: [default]
+      endpoints: [openai]
+    - model: glm-5.1
+      vendor: Zhipu AI
+      model_ratio: 0.6
+      completion_ratio: 3.333333333333
+      cache_ratio: 0.1
+      groups: [default]
+      endpoints: [openai]
+    - model: kimi-k2.5
+      vendor: Moonshot
+      model_ratio: 0.15
+      completion_ratio: 3
+      cache_ratio: 0.1
+      groups: [default]
+      endpoints: [openai]
+    - model: kimi-k2.6
+      vendor: Moonshot
+      model_ratio: 0.2
+      completion_ratio: 3
+      cache_ratio: 0.1
+      groups: [default]
+      endpoints: [openai]
+    - model: kimi-k3
+      vendor: Moonshot
+      model_ratio: 0.25
+      completion_ratio: 3
+      cache_ratio: 0.1
+      groups: [default]
+      endpoints: [openai]
+    - model: MiniMax-M2.5
+      vendor: MiniMax
+      model_ratio: 0.135
+      completion_ratio: 4.074074074074
+      cache_ratio: 0.1
+      groups: [default]
+      endpoints: [openai]
+
+refunds:
+  policy_url: https://weaveapi.dev/refund/
+  summary: >-
+    Prepaid credits. Duplicate or incorrect charges are investigated; missing credits from a completed
+    recharge are reconciled on request; credits already consumed for delivered usage are generally not
+    refundable unless required by law or a confirmed billing error.
+
+x-evidence:
+  - url: https://weaveapi.dev/pricing/
+    http_status: 200
+  - url: https://api.weaveapi.dev/api/pricing
+    http_status: 200
+    content_type: application/json
+  - url: https://api.weaveapi.dev/api/status
+    http_status: 200
+    content_type: application/json
+  - url: https://weaveapi.dev/refund/
+    http_status: 200

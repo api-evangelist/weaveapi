@@ -1,0 +1,181 @@
+generated: '2026-08-11'
+method: probed
+source: https://weaveapi.dev/docs/
+docs: https://weaveapi.dev/docs/
+
+summary: >-
+  WeaveAPI's cross-cutting semantics are inherited rather than authored: it is an OpenAI-wire-compatible
+  gateway, so the request/response shapes, streaming behaviour and error envelope are OpenAI's, and the
+  provider documents only the delta (base URL, key, model id). That inheritance is the product's whole
+  value proposition and it is a legitimate design, but it means WeaveAPI itself publishes no convention
+  contract of its own: no idempotency, no pagination, no versioning policy, no rate-limit signalling,
+  and no machine-readable spec pinning any of it.
+
+authentication:
+  style: bearer-api-key
+  header: 'Authorization: Bearer YOUR_WEAVEAPI_KEY'
+  detail: authentication/weaveapi-authentication.yml
+
+idempotency:
+  supported: false
+  header: null
+  note: >-
+    No idempotency key is documented, no Idempotency-Key header is mentioned anywhere in the docs, and
+    there is no spec to carry one as a parameter. Requests are POST-and-hope. For a metered, prepaid
+    service this is a real gap: a client that retries a timed-out chat completion has no way to avoid
+    being billed twice. NO Idempotency pointer is emitted in apis.yml — WeaveAPI has no idempotency
+    contract, and asserting one would be false.
+
+pagination:
+  supported: false
+  note: >-
+    No collection endpoint in the documented surface is paginated. GET /v1/models returns the full list
+    in one response (OpenAI convention: {object:"list", data:[…]} with no cursor).
+
+versioning:
+  scheme: uri-path
+  current: v1
+  base_url: https://api.weaveapi.dev/v1
+  policy_published: false
+  note: >-
+    /v1 is a compatibility marker inherited from the OpenAI wire format, not a WeaveAPI version train.
+    No versioning policy, no version negotiation header, and no commitment about what a /v2 would mean.
+  build_identifier:
+    header: x-new-api-version
+    observed: v1.0.0-rc.10-abuse-hardening-20260731
+    note: >-
+      Every response carries the gateway's build string. It is a deployment identifier, not an API
+      version, and it is not documented — but it does mean the running build is publicly legible,
+      including that the current deployment is a release candidate ("rc.10") and that the most recent
+      change theme was abuse hardening dated 2026-07-31.
+
+request_tracing:
+  header: x-oneapi-request-id
+  returned_on: every response, including errors
+  example: '202608112040025861429178268d9d6T5viNnDh'
+  also_in_error_body: true
+  documented: >-
+    Not documented as a header by name, but the docs and support page both ask developers to supply the
+    "request id if visible" when escalating, and the id is embedded in the error message text.
+
+error_envelope:
+  format: openai-error-envelope
+  shape: '{"error": {"message": "...", "type": "...", "param": "...", "code": "..."}}'
+  rfc9457: false
+  detail: errors/weaveapi-error-codes.yml
+
+rate_limit_signaling:
+  headers: []
+  documented_limits: false
+  detail: rate-limits/weaveapi-rate-limits.yml
+
+metadata:
+  supported: false
+  note: No request metadata / tagging convention is documented for attributing usage.
+
+field_expansion:
+  supported: false
+
+content_type:
+  request: application/json
+  response: application/json; charset=utf-8
+
+streaming:
+  supported: inherited
+  note: >-
+    Not documented by WeaveAPI. The OpenAI-compatible contract implies "stream": true returns
+    text/event-stream, and the gateway advertises openai endpoint compatibility, but WeaveAPI publishes
+    no statement about streaming support per route. Recorded as inherited-and-unconfirmed rather than
+    asserted — an agent should treat per-route streaming as unverified.
+
+transport:
+  tls: required
+  http_version: HTTP/2 (h2), HTTP/3 advertised via alt-svc
+  hsts: 'max-age=31536000; includeSubDomains'
+  server: Caddy (via header), fronted by Cloudflare on the marketing host
+  security_headers:
+    x-content-type-options: nosniff
+    referrer-policy: strict-origin-when-cross-origin
+
+# Route surface established by status discrimination against the live gateway:
+# 401 "Invalid token" = the route exists and requires auth; 404 "Invalid URL" = no such route.
+# This is an OBSERVED SURFACE, not a specification. No request or response schema is asserted,
+# because WeaveAPI publishes none and inventing them would fabricate a contract.
+observed_route_surface:
+  method: probed
+  fetched: '2026-08-11'
+  host: https://api.weaveapi.dev
+  technique: >-
+    Unauthenticated probe of each candidate path with both GET and POST. A 401 with the gateway's
+    "Invalid token" envelope proves the route is registered and auth-gated. A 404 "Invalid URL (METHOD
+    /path)" proves it is not routed. No credentials were used and no access control was defeated.
+  documented_routes:
+    - {method: POST, path: /v1/chat/completions, status: 401, exists: true, documented: true}
+    - {method: POST, path: /v1/responses, status: 401, exists: true, documented: true}
+    - {method: GET, path: /v1/models, status: 401, exists: true, documented: true}
+  undocumented_routes:
+    note: >-
+      These routes are live and auth-gated but appear NOWHERE in WeaveAPI's documentation. The docs
+      describe three endpoints; the gateway serves at least fourteen. A developer cannot discover the
+      difference without probing, and no spec lists them.
+    routes:
+      - {method: POST, path: /v1/completions, status: 401, exists: true}
+      - {method: POST, path: /v1/embeddings, status: 401, exists: true}
+      - {method: POST, path: /v1/images/generations, status: 401, exists: true}
+      - {method: POST, path: /v1/audio/speech, status: 401, exists: true}
+      - {method: POST, path: /v1/audio/transcriptions, status: 401, exists: true}
+      - {method: POST, path: /v1/moderations, status: 401, exists: true}
+      - {method: POST, path: /v1/messages, status: 401, exists: true, note: Anthropic-compatible; referenced only inside the Claude Code guide.}
+      - {method: POST, path: /v1/rerank, status: 401, exists: true}
+      - {method: GET, path: /v1/files, status: 401, exists: true}
+      - {method: POST, path: /v1/files, status: 401, exists: true}
+      - {method: GET, path: /v1/realtime, status: 401, exists: true}
+      - {method: GET, path: /v1/dashboard/billing/usage, status: 401, exists: true}
+      - {method: GET, path: /v1/dashboard/billing/subscription, status: 401, exists: true}
+  absent_routes:
+    - {method: POST, path: /v1/batches, status: 404, exists: false}
+    - {method: POST, path: /v1/messages/count_tokens, status: 404, exists: false}
+    - {method: ANY, path: /messages, status: 404, exists: false, note: Confirms the Anthropic route lives at /v1/messages; the docs' "base URL without /v1" instruction is correct because the client appends /v1/messages itself.}
+  caveat: >-
+    Route existence does not imply a usable model route behind it. The public model catalog lists
+    supported_endpoint_types ["openai"] for all 19 models and none for audio, image, embedding or rerank
+    endpoints, so several of these registered routes may have no backing model configured.
+
+unpublished_contract:
+  openapi: false
+  asyncapi: false
+  graphql: false
+  postman: false
+  llms_txt: false
+  mcp: false
+  note: >-
+    No machine-readable contract of any kind is published. Probed /openapi.json, /openapi.yaml,
+    /swagger.json, /v1/openapi.json, /api-docs, /docs, /redoc, /swagger/doc.json on the API host and
+    /openapi.json, /apis.json, /llms.txt on the docs host — all 404. This repo deliberately contains NO
+    openapi/ directory: WeaveAPI's endpoint surface is legible enough to describe, but its request and
+    response schemas are not published, and authoring a spec would fabricate a contract the provider
+    has never committed to.
+  what_would_fix_it: >-
+    WeaveAPI runs the New API gateway, which is OpenAI-wire-compatible by construction. Publishing an
+    OpenAPI 3.1 document for the routes it actually serves — even one generated from the OpenAI schema
+    and trimmed to the supported set — would be a small amount of work and would move essentially every
+    contract-quality and agent-readiness signal this provider currently scores zero on.
+
+cross_references:
+  authentication: authentication/weaveapi-authentication.yml
+  errors: errors/weaveapi-error-codes.yml
+  rate_limits: rate-limits/weaveapi-rate-limits.yml
+  lifecycle: lifecycle/weaveapi-lifecycle.yml
+  plans: plans/weaveapi-plans-pricing.yml
+
+x-evidence:
+  - url: https://weaveapi.dev/docs/
+    http_status: 200
+  - url: https://api.weaveapi.dev/v1/embeddings
+    http_status: 401
+  - url: https://api.weaveapi.dev/v1/batches
+    http_status: 404
+  - url: https://api.weaveapi.dev/openapi.json
+    http_status: 404
+  - url: https://api.weaveapi.dev/swagger/doc.json
+    http_status: 404

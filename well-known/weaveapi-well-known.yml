@@ -1,0 +1,191 @@
+generated: '2026-08-11'
+method: probed
+source: https://weaveapi.dev/ + https://api.weaveapi.dev/ + https://console.weaveapi.dev/
+note: >-
+  Every RFC 8615 /.well-known/ path was probed on all three WeaveAPI hosts and NOT ONE returned a real
+  document. The marketing host (weaveapi.dev) and the API host (api.weaveapi.dev) return honest 404s.
+  The console host (console.weaveapi.dev) is a single-page application whose catch-all route answers
+  HTTP 200 with the same 2,364-byte HTML shell for EVERY path, including paths that cannot exist —
+  this is a soft-404, not a served document, and it is recorded as a MISS. No WellKnown pointer is
+  emitted in apis.yml, because a pointer would assert that WeaveAPI serves a discovery surface it does
+  not serve. The one real machine-readable discovery document WeaveAPI does publish is not at a
+  /.well-known/ path at all: it is the unauthenticated gateway config at /api/status, saved here as
+  weaveapi-gateway-status.json, and the model/price catalog at /api/pricing (see plans/).
+
+hosts:
+  - host: https://weaveapi.dev
+    kind: marketing + documentation
+    catch_all_soft_200: false
+  - host: https://api.weaveapi.dev
+    kind: API gateway
+    catch_all_soft_200: false
+  - host: https://console.weaveapi.dev
+    kind: hosted console (SPA)
+    catch_all_soft_200: true
+    soft_200_note: >-
+      Returns 200 text/html (2364 bytes, <!doctype html> shell, lang="zh") for every probed path.
+      All console rows below are therefore recorded as miss, not hit.
+
+documents:
+  # --- https://weaveapi.dev (marketing + docs) ---
+  - host: weaveapi.dev
+    path: /.well-known/security.txt
+    status: 404
+    hit: false
+  - host: weaveapi.dev
+    path: /.well-known/openid-configuration
+    status: 404
+    hit: false
+  - host: weaveapi.dev
+    path: /.well-known/oauth-authorization-server
+    status: 404
+    hit: false
+  - host: weaveapi.dev
+    path: /.well-known/oauth-protected-resource
+    status: 404
+    hit: false
+  - host: weaveapi.dev
+    path: /.well-known/api-catalog
+    status: 404
+    hit: false
+  - host: weaveapi.dev
+    path: /.well-known/ai-plugin.json
+    status: 404
+    hit: false
+  - host: weaveapi.dev
+    path: /.well-known/agent-card.json
+    status: 404
+    hit: false
+  - host: weaveapi.dev
+    path: /.well-known/agent.json
+    status: 404
+    hit: false
+  - host: weaveapi.dev
+    path: /llms.txt
+    status: 404
+    hit: false
+  - host: weaveapi.dev
+    path: /openapi.json
+    status: 404
+    hit: false
+
+  # --- https://api.weaveapi.dev (the gateway itself) ---
+  - host: api.weaveapi.dev
+    path: /.well-known/security.txt
+    status: 404
+    hit: false
+  - host: api.weaveapi.dev
+    path: /.well-known/openid-configuration
+    status: 404
+    hit: false
+  - host: api.weaveapi.dev
+    path: /.well-known/oauth-authorization-server
+    status: 404
+    hit: false
+  - host: api.weaveapi.dev
+    path: /.well-known/oauth-protected-resource
+    status: 404
+    hit: false
+  - host: api.weaveapi.dev
+    path: /.well-known/api-catalog
+    status: 404
+    hit: false
+  - host: api.weaveapi.dev
+    path: /.well-known/ai-plugin.json
+    status: 404
+    hit: false
+  - host: api.weaveapi.dev
+    path: /.well-known/agent-card.json
+    status: 404
+    hit: false
+  - host: api.weaveapi.dev
+    path: /.well-known/agent.json
+    status: 404
+    hit: false
+  - host: api.weaveapi.dev
+    path: /llms.txt
+    status: 404
+    hit: false
+  - host: api.weaveapi.dev
+    path: /openapi.json
+    status: 404
+    hit: false
+
+  # --- https://console.weaveapi.dev (SPA catch-all; every 200 below is an HTML shell) ---
+  - host: console.weaveapi.dev
+    path: /.well-known/security.txt
+    status: 200
+    hit: false
+    content_type: text/html
+    reason: spa-catch-all-html-shell
+  - host: console.weaveapi.dev
+    path: /.well-known/openid-configuration
+    status: 200
+    hit: false
+    content_type: text/html
+    reason: spa-catch-all-html-shell
+  - host: console.weaveapi.dev
+    path: /.well-known/oauth-authorization-server
+    status: 200
+    hit: false
+    content_type: text/html
+    reason: spa-catch-all-html-shell
+  - host: console.weaveapi.dev
+    path: /.well-known/oauth-protected-resource
+    status: 200
+    hit: false
+    content_type: text/html
+    reason: spa-catch-all-html-shell
+  - host: console.weaveapi.dev
+    path: /.well-known/api-catalog
+    status: 200
+    hit: false
+    content_type: text/html
+    reason: spa-catch-all-html-shell
+  - host: console.weaveapi.dev
+    path: /.well-known/ai-plugin.json
+    status: 200
+    hit: false
+    content_type: text/html
+    reason: spa-catch-all-html-shell
+  - host: console.weaveapi.dev
+    path: /.well-known/agent-card.json
+    status: 200
+    hit: false
+    content_type: text/html
+    reason: spa-catch-all-html-shell
+  - host: console.weaveapi.dev
+    path: /.well-known/agent.json
+    status: 200
+    hit: false
+    content_type: text/html
+    reason: spa-catch-all-html-shell
+
+# Real machine-readable documents WeaveAPI DOES serve, outside /.well-known/
+non_standard_discovery:
+  - path: /api/status
+    host: api.weaveapi.dev
+    status: 200
+    content_type: application/json
+    file: weaveapi-gateway-status.json
+    describes: >-
+      Unauthenticated gateway configuration — system name, build version, console address, docs link,
+      enabled login methods (password, GitHub OAuth, Google OIDC, passkey), Turnstile site key,
+      quota/currency display settings, and the third-party chat clients the console can hand off to.
+  - path: /api/pricing
+    host: api.weaveapi.dev
+    status: 200
+    content_type: application/json
+    file: ../plans/weaveapi-model-pricing.json
+    describes: >-
+      Unauthenticated model + price-ratio catalog for all callable model routes. This is the public
+      projection of the "Model Marketplace" the docs name as the source of truth.
+  - path: /robots.txt
+    host: weaveapi.dev
+    status: 200
+    content_type: text/plain
+    file: weaveapi-content-signals.txt
+    describes: >-
+      Carries Cloudflare-managed Content Signals (search=yes, ai-train=no, use=reference) plus explicit
+      Disallow for GPTBot, ClaudeBot, CCBot, Google-Extended, Applebot-Extended, Amazonbot, Bytespider
+      and meta-externalagent. See weaveapi-content-signals.yml.

@@ -1,0 +1,164 @@
+generated: '2026-08-11'
+method: probed
+source: https://weaveapi.dev/docs/
+docs: https://weaveapi.dev/docs/
+
+format: openai-error-envelope
+rfc9457: false
+rfc9457_note: >-
+  WeaveAPI does NOT use RFC 9457 problem+json. It returns the OpenAI-style error envelope, which is the
+  correct choice for an OpenAI-wire-compatible gateway — an existing OpenAI SDK parses it without
+  modification. Recorded as a deliberate compatibility decision, not a defect.
+
+envelope:
+  content_type: application/json; charset=utf-8
+  shape: |
+    {
+      "error": {
+        "message": "human-readable description",
+        "type": "error class",
+        "param": "offending parameter, may be empty",
+        "code": "machine code, may be empty"
+      }
+    }
+  fields:
+    - field: error.message
+      always_present: true
+      note: >-
+        Carries the request id inline in parentheses on gateway-generated errors, e.g.
+        "Invalid token (request id: 202608112040025861429178268d9d6T5viNnDh)". This duplicates the
+        x-oneapi-request-id response header.
+    - field: error.type
+      always_present: true
+      observed_values: [new_api_error, invalid_request_error]
+    - field: error.param
+      always_present: false
+      note: Observed empty on every probed error.
+    - field: error.code
+      always_present: false
+      note: >-
+        Observed EMPTY on every probed error. This is the single biggest error-semantics gap — the
+        machine-readable field an agent would branch on carries no value, leaving string-matching on
+        error.message as the only way to distinguish failure modes.
+  correlation:
+    header: x-oneapi-request-id
+    also_in_body: true
+    documented: >-
+      The docs and support page both instruct developers to include "request id if visible" when
+      contacting support.
+
+# Observed live against the running gateway, unauthenticated.
+observed_errors:
+  method: probed
+  fetched: '2026-08-11'
+  errors:
+    - status: 401
+      type: new_api_error
+      code: ''
+      message: 'Invalid token (request id: …)'
+      trigger: Missing or invalid Authorization bearer token on any /v1 route.
+      observed_on:
+        - GET /v1/models
+        - POST /v1/chat/completions
+        - POST /v1/responses
+        - POST /v1/messages
+      remediation: >-
+        Confirm the Authorization header is "Bearer YOUR_WEAVEAPI_KEY" and that the key is active in
+        Console → Token Management.
+      note: Returned identically for an absent header and for a wrong key.
+    - status: 404
+      type: invalid_request_error
+      code: ''
+      message: 'Invalid URL (GET /v1/nonexistent)'
+      trigger: Request to a path the gateway does not route.
+      observed_on:
+        - GET /v1/nonexistent
+        - POST /v1/batches
+        - POST /v1/messages/count_tokens
+      remediation: Check the endpoint path and that the route is supported by the gateway.
+      note: >-
+        Echoes the method and path back in the message. Unlike the 401, this response is cacheable
+        (cache-control max-age=604800).
+    - status: 401
+      type: null
+      code: null
+      message: 'Unauthorized, not logged in and no access token provided'
+      envelope: '{"message": "...", "success": false}'
+      trigger: Console/admin API routes (/api/*) called without a session.
+      observed_on:
+        - GET /api/models
+      note: >-
+        A SECOND, INCOMPATIBLE ERROR ENVELOPE. The console API under /api/* uses {message, success}
+        rather than {error:{...}}. Two envelopes coexist on the same host; only the /v1 one is
+        documented.
+    - status: 403
+      type: null
+      code: null
+      message: '倍率配置接口未启用'
+      envelope: '{"message": "...", "success": false}'
+      trigger: GET /api/ratio_config
+      observed_on:
+        - GET /api/ratio_config
+      note: >-
+        Untranslated Chinese error string ("the ratio configuration interface is not enabled") leaking
+        from the upstream open-source gateway to an English-language product surface.
+
+# The docs' own failure-mode table. Prose, not codes.
+documented_failure_modes:
+  source: https://weaveapi.dev/docs/
+  note: >-
+    WeaveAPI publishes a troubleshooting table rather than an error-code reference. It maps seven issue
+    types to causes and checks, but ties none of them to an HTTP status or an error code.
+  modes:
+    - issue: Authentication issue
+      means: The request may be missing a valid WeaveAPI key.
+      check: Confirm the Authorization header uses Bearer YOUR_WEAVEAPI_KEY and the key is active.
+      maps_to_status: 401
+    - issue: Wrong base URL
+      means: The SDK or HTTP client may be pointed at the wrong API host.
+      check: Use https://api.weaveapi.dev/v1 as the base URL.
+      maps_to_status: 404
+    - issue: Model ID not available
+      means: The selected model route may not be available for your account.
+      check: Confirm the model ID in the live Model Marketplace or authenticated /v1/models response.
+      maps_to_status: null
+    - issue: Insufficient balance
+      means: Your prepaid balance may not cover the request.
+      check: Check balance, recent usage, and top-up status in the Console.
+      maps_to_status: null
+    - issue: Route temporarily unavailable
+      means: The selected route may be unavailable or capacity-limited for a short period.
+      check: Try again later and confirm whether another available route fits your use case.
+      maps_to_status: null
+    - issue: Upstream provider issue
+      means: The upstream model provider may be returning an error or degraded response.
+      check: Retry later and compare with another available route when appropriate.
+      maps_to_status: null
+    - issue: SDK configuration issue
+      means: The client library may not be using the expected base URL, key, endpoint, or request shape.
+      check: Check base URL, Authorization header, endpoint path, and model ID placeholder replacement.
+      maps_to_status: null
+  escalation:
+    contact: support@weaveapi.dev
+    include: [request time, model ID, endpoint path, full error message, request id if visible]
+    do_not_send: [API keys]
+
+gaps:
+  - error.code is empty on every observed error — no machine-branchable code.
+  - No published error-code reference; only a prose troubleshooting table.
+  - Four of seven documented failure modes map to no stated HTTP status.
+  - Two incompatible error envelopes on one host (/v1 vs /api).
+  - Untranslated upstream Chinese error strings reachable on a public endpoint.
+  - No documented retry/backoff guidance and no Retry-After on any observed response.
+
+x-evidence:
+  - url: https://api.weaveapi.dev/v1/models
+    http_status: 401
+  - url: https://api.weaveapi.dev/v1/nonexistent
+    http_status: 404
+  - url: https://api.weaveapi.dev/api/models
+    http_status: 401
+  - url: https://api.weaveapi.dev/api/ratio_config
+    http_status: 403
+  - url: https://weaveapi.dev/docs/
+    http_status: 200

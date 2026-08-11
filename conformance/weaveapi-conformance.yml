@@ -1,0 +1,131 @@
+generated: '2026-08-11'
+method: probed
+source: https://weaveapi.dev/docs/
+
+summary: >-
+  WeaveAPI's only meaningful conformance claim is wire compatibility with the OpenAI API — which it
+  makes explicitly, states the limits of honestly ("Test any advanced endpoint capability against the
+  selected model before production use"), and which probing corroborates at the routing level. It
+  publishes no security, privacy or industry certification of any kind, and no compliance program.
+
+standards:
+  - id: openai-wire-compatibility
+    conforms: true
+    evidence: >-
+      Documented as the product's core claim; POST /v1/chat/completions, POST /v1/responses and GET
+      /v1/models all return the gateway's auth challenge rather than 404, confirming the routes are
+      registered. The public catalog declares supported_endpoint {openai: {path: /v1/chat/completions,
+      method: POST}}. Docs supply working OpenAI-SDK and curl examples against the /v1 base URL.
+    caveat: >-
+      Compatibility is per-route and per-model, not blanket. The docs warn that responses-style requests
+      "should only be used after confirming the selected route supports responses-style requests" and
+      that not every model route supports every endpoint.
+    verified: partial
+
+  - id: anthropic-messages-compatibility
+    conforms: true
+    evidence: >-
+      POST https://api.weaveapi.dev/v1/messages returns 401 (route registered, auth required), and a
+      dedicated Claude Code guide documents Anthropic-compatible setup against the bare host.
+    caveat: >-
+      No model in the public catalog declares supported_endpoint_types ["anthropic"], and the catalog
+      contains zero Anthropic-vendor routes. The route exists; what answers on it is unverifiable
+      without an account.
+    verified: partial
+
+  - id: rfc9457-problem-details
+    conforms: false
+    evidence: >-
+      Errors use the OpenAI envelope {"error":{message,type,param,code}} with content-type
+      application/json, not application/problem+json. Deliberate — RFC 9457 would break OpenAI SDK
+      compatibility.
+
+  - id: oauth2
+    conforms: false
+    evidence: >-
+      The API uses a static bearer API key with no OAuth flows, no scopes, and no token endpoint.
+      /.well-known/oauth-authorization-server and /.well-known/oauth-protected-resource both 404.
+      GitHub OAuth and Google OIDC exist for CONSOLE LOGIN only and confer no API authorization.
+    applies_to: api
+
+  - id: openid-connect
+    conforms: false
+    evidence: >-
+      /.well-known/openid-configuration returns 404 on every host. WeaveAPI is an OIDC relying party
+      (Google) for console login, not an OIDC provider.
+    applies_to: api
+
+  - id: webauthn-passkey
+    conforms: true
+    evidence: >-
+      /api/status reports passkey_rp_id console.weaveapi.dev, passkey_display_name WeaveAPI,
+      passkey_user_verification preferred. Console human login only.
+    applies_to: console
+
+  - id: rfc9116-security-txt
+    conforms: false
+    evidence: /.well-known/security.txt returns 404 on weaveapi.dev and api.weaveapi.dev.
+
+  - id: rfc8615-well-known
+    conforms: false
+    evidence: No /.well-known/ path returns a real document on any host. See well-known/.
+
+  - id: hsts
+    conforms: true
+    evidence: 'strict-transport-security: max-age=31536000; includeSubDomains on api.weaveapi.dev responses.'
+
+  - id: content-signals
+    conforms: true
+    evidence: >-
+      robots.txt on weaveapi.dev serves Content-Signal search=yes, ai-train=no, use=reference plus
+      explicit Disallow for nine AI crawlers. Cloudflare-managed block, served from the provider origin.
+    detail: well-known/weaveapi-content-signals.yml
+
+  - id: openapi
+    conforms: false
+    evidence: No OpenAPI published. Every candidate path probed returns 404. See conventions/.
+
+  - id: asyncapi
+    conforms: false
+    evidence: No event, streaming or webhook surface is documented or discoverable.
+    applicable: false
+    applicable_note: >-
+      WeaveAPI is a synchronous request/response inference gateway with no event surface. Not a gap —
+      there is nothing for an AsyncAPI to describe.
+
+  - id: rfc9331-ratelimit-headers
+    conforms: false
+    evidence: No RateLimit-* or X-RateLimit-* headers on any observed response. See rate-limits/.
+
+  - id: idempotency
+    conforms: false
+    evidence: No idempotency key documented or supported. See conventions/.
+
+# No compliance program of any kind is published. No Compliance pointer is emitted in apis.yml.
+compliance_program:
+  published: false
+  certifications: []
+  probed:
+    - {url: 'https://weaveapi.dev/security/', status: 404}
+    - {url: 'https://weaveapi.dev/.well-known/security.txt', status: 404}
+    - {url: 'https://trust.weaveapi.dev/', result: DNS did not resolve}
+  searched_terms_in_site_copy: [SOC 2, ISO 27001, PCI DSS, HIPAA, FedRAMP, GDPR, CSA STAR]
+  found: []
+  note: >-
+    No certification, audit report, trust center, subprocessor list or DPA appears anywhere on the
+    public site. The privacy policy mentions "compliance needs" as a retention justification but names
+    no regime. Notably absent given the service transmits customer prompts to third-party model
+    providers across multiple jurisdictions — the privacy policy discloses that routing but does not
+    identify the upstream processors, which is the disclosure a GDPR-exposed buyer would need.
+
+x-evidence:
+  - url: https://api.weaveapi.dev/api/pricing
+    http_status: 200
+  - url: https://api.weaveapi.dev/v1/messages
+    http_status: 401
+  - url: https://weaveapi.dev/.well-known/security.txt
+    http_status: 404
+  - url: https://weaveapi.dev/robots.txt
+    http_status: 200
+  - url: https://weaveapi.dev/security/
+    http_status: 404

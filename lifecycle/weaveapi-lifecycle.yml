@@ -1,0 +1,130 @@
+generated: '2026-08-11'
+method: probed
+source: https://weaveapi.dev/terms/
+docs: https://weaveapi.dev/docs/
+
+summary: >-
+  WeaveAPI publishes no lifecycle commitments. There is no changelog, no status page, no deprecation
+  policy, no SLA and no uptime target. The terms explicitly reserve the right to change model
+  availability, route names and prices without notice, and the docs push all currency questions to the
+  console Model Marketplace — which makes the live catalog the only version signal a consumer has.
+
+versioning:
+  scheme: uri-path
+  current: v1
+  base_url: https://api.weaveapi.dev/v1
+  docs: https://weaveapi.dev/docs/
+  policy_url: null
+  note: >-
+    /v1 is inherited from the OpenAI wire format rather than declared as a WeaveAPI version train. No
+    policy describes what changes within v1, what would produce a v2, or how long v1 is supported.
+  build_version:
+    method: probed
+    header: x-new-api-version
+    observed: v1.0.0-rc.10-abuse-hardening-20260731
+    fetched: '2026-08-11'
+    note: >-
+      The running gateway build is publicly legible on every response and is a release candidate. Also
+      served at /api/status as `version`. Not a product version and not documented.
+
+deprecation:
+  policy_url: null
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  advance_notice: null
+  note: >-
+    No deprecation policy exists. The Terms of Service take the opposite position — §9 "Changes to the
+    service": "Model availability, route names, prices, and console features may change as providers and
+    platform operations evolve. Use the Model Marketplace for current availability." A model route can
+    therefore disappear or be renamed with no notice period, no Sunset header, and no migration path.
+    This is the single largest operational risk in adopting WeaveAPI and it is disclosed honestly in the
+    terms rather than hidden — recorded as a stated policy of no-commitment, not as an omission.
+  deprecated_operations: []
+
+availability:
+  sla_url: null
+  sla_published: false
+  uptime_target: null
+  note: >-
+    Terms §4 "Model route availability": "Model routes depend on upstream providers, network conditions,
+    capacity limits, quota limits, and maintenance. We do not guarantee every route is available at all
+    times." An explicit disclaimer of availability guarantees, in place of an SLA.
+
+status_page:
+  url: null
+  published: false
+  probed:
+    - {url: 'https://status.weaveapi.dev/', result: DNS did not resolve}
+    - {url: 'https://uptime.weaveapi.dev/', result: DNS did not resolve}
+    - {url: 'https://weaveapi.dev/status/', status: 404}
+    - {url: 'https://api.weaveapi.dev/api/uptime/status', status: 200, body: '{"data":[],"message":"","success":true}'}
+  note: >-
+    The gateway config reports uptime_kuma_enabled: true — the console has an Uptime Kuma status
+    integration switched ON — but the public uptime endpoint returns an EMPTY data array, no status
+    subdomain resolves, and no status page is linked from any page on the site. The capability is
+    enabled and unpopulated. NO StatusPage pointer is emitted in apis.yml, because there is no status
+    page for a consumer to watch.
+
+changelog:
+  url: null
+  published: false
+  probed:
+    - {url: 'https://weaveapi.dev/changelog/', status: 404}
+    - {url: 'https://weaveapi.dev/blog/', status: 404}
+  note: >-
+    No changelog, release notes or blog. The only dated signals anywhere on the surface are "Last
+    updated: June 2026" on the terms, privacy and abuse policies, and the date embedded in the gateway
+    build string (20260731). No ChangeLog pointer is emitted.
+
+maintenance_windows:
+  published: false
+
+support:
+  channel: email
+  contact: support@weaveapi.dev
+  url: https://weaveapi.dev/support/
+  response_target: >-
+    "We aim to review account, billing, and API access issues as quickly as possible." No stated
+    response time or business-hours window.
+  escalation_inputs: [account email, model id, request time and timezone, error message, request id, reproducibility]
+
+policies:
+  terms_of_service:
+    url: https://weaveapi.dev/terms/
+    last_updated: '2026-06'
+  privacy_policy:
+    url: https://weaveapi.dev/privacy/
+    last_updated: '2026-06'
+  abuse_policy:
+    url: https://weaveapi.dev/abuse/
+    last_updated: '2026-06'
+  refund_policy:
+    url: https://weaveapi.dev/refund/
+
+data_handling:
+  source: https://weaveapi.dev/privacy/
+  prompts_routed_upstream: true
+  prompt_content_sold: false
+  statement: >-
+    "Prompts and responses may be routed to upstream model providers to fulfill requests. WeaveAPI does
+    not sell prompt content." Provider handling varies by route; WeaveAPI does not enumerate which
+    upstream handles which route, so a consumer cannot determine where a given prompt is processed.
+  retention: >-
+    "We retain operational records for metering, security, support, billing reconciliation, and
+    compliance needs, then reduce or remove records when they are no longer needed." No retention period
+    is stated.
+  logged: [account email, API key metadata, usage logs, billing and top-up records, request metadata, error logs, support messages]
+
+x-evidence:
+  - url: https://weaveapi.dev/terms/
+    http_status: 200
+  - url: https://weaveapi.dev/changelog/
+    http_status: 404
+  - url: https://weaveapi.dev/status/
+    http_status: 404
+  - url: https://api.weaveapi.dev/api/uptime/status
+    http_status: 200
+  - url: https://weaveapi.dev/privacy/
+    http_status: 200

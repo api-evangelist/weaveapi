@@ -1,0 +1,98 @@
+generated: '2026-08-11'
+method: searched
+source: https://weaveapi.dev/docs/
+
+package_count: 0
+official_package_count: 0
+
+summary: >-
+  WeaveAPI publishes NO first-party client library in any language, and this is a deliberate product
+  position rather than an oversight: the entire pitch is "keep your SDK, change the base URL". The docs'
+  SDK section says so directly — "OpenAI-compatible SDKs and frameworks usually need only a base URL and
+  key change." Consumers install the vendor-neutral OpenAI SDK and point it at api.weaveapi.dev/v1.
+  Recorded as zero official packages with the reason, not as an unexplained absence. No SDKs pointer is
+  emitted in apis.yml, because WeaveAPI ships no SDK.
+
+packages: []
+
+registries_searched:
+  - registry: npm
+    query: weaveapi
+    result: >-
+      One unrelated match: `weaveapi` 1.0.131, last published 2018-11-27, repository
+      github.com/elihanover/WeaveAPI. Predates this company by seven years and is not affiliated. NOT
+      recorded as a package for this provider.
+    official_found: false
+    status: 200
+  - registry: pypi
+    query: weaveapi
+    result: No such project.
+    official_found: false
+    status: 404
+  - registry: crates.io
+    query: weaveapi
+    result: 0 crates.
+    official_found: false
+    status: 200
+  - registry: github
+    query: weaveapi / weave-api / weaveapidev orgs
+    result: >-
+      No GitHub organization exists at github.com/weaveapi, /weave-api or /weaveapidev (all 404). The
+      only repository matching the name in GitHub search besides an unrelated user fork is
+      api-evangelist/weaveapi — this profile repository.
+    official_found: false
+    status: 404
+  - registry: mcp-registry
+    query: weaveapi
+    result: 0 servers in the official MCP registry.
+    official_found: false
+    status: 200
+
+# Third-party clients the provider documents working against. NOT WeaveAPI packages.
+documented_compatible_clients:
+  note: >-
+    These are other people's libraries and applications that WeaveAPI documents configuring against its
+    base URL. They are listed for integration value and are explicitly NOT first-party — none is
+    published, versioned or supported by WeaveAPI.
+  clients:
+    - name: openai (OpenAI official SDK)
+      language: javascript
+      relationship: third-party, documented in the quickstart
+      usage: 'new OpenAI({ apiKey, baseURL: "https://api.weaveapi.dev/v1" })'
+      official_to_weaveapi: false
+    - name: CC Switch
+      relationship: third-party provider-switching utility; WeaveAPI publishes six setup guides for it
+      distribution: >-
+        The guides instruct users to install only from the official CC Switch GitHub project or its
+        Releases page. WeaveAPI does not host or mirror the binary.
+      official_to_weaveapi: false
+      guides:
+        - {app: Claude Code, url: 'https://weaveapi.dev/docs/claude-code-cc-switch/', base_url: 'https://api.weaveapi.dev', provider_type: Anthropic-compatible}
+        - {app: Codex, url: 'https://weaveapi.dev/docs/codex-cc-switch/', base_url: 'https://api.weaveapi.dev/v1', provider_type: OpenAI-compatible}
+        - {app: OpenCode, url: 'https://weaveapi.dev/docs/opencode-cc-switch/', base_url: 'https://api.weaveapi.dev/v1', provider_type: OpenAI-compatible}
+        - {app: OpenClaw, url: 'https://weaveapi.dev/docs/openclaw-cc-switch/', base_url: 'https://api.weaveapi.dev/v1', provider_type: OpenAI-compatible}
+        - {app: Claude Desktop, url: 'https://weaveapi.dev/docs/claude-desktop-cc-switch/', base_url: 'https://api.weaveapi.dev/v1', provider_type: OpenAI-compatible}
+        - {app: Hermes, url: 'https://weaveapi.dev/docs/hermes-cc-switch/', base_url: 'https://api.weaveapi.dev/v1', provider_type: OpenAI-compatible}
+    - name: Cherry Studio, AionUI, DeepChat, Lobe Chat, 流畅阅读
+      relationship: >-
+        Registered as one-click console handoff targets in the gateway config (/api/status `chats`),
+        each with a deep-link URI template that pre-fills provider settings. Not documented on the
+        marketing site.
+      official_to_weaveapi: false
+
+currency_note: >-
+  No version or published date is recorded for any entry above because WeaveAPI has no package in any
+  registry to date. The SDK-decay signal this field normally carries does not apply here: there is no
+  first-party library that could fall behind the API. The corresponding risk for WeaveAPI consumers sits
+  elsewhere — they depend on the OpenAI SDK's release cadence and on WeaveAPI silently keeping wire
+  parity with it, with no published compatibility matrix stating which OpenAI SDK versions are tested.
+
+x-evidence:
+  - url: https://registry.npmjs.org/-/v1/search?text=weaveapi
+    http_status: 200
+  - url: https://pypi.org/pypi/weaveapi/json
+    http_status: 404
+  - url: https://github.com/weaveapi
+    http_status: 404
+  - url: https://weaveapi.dev/docs/
+    http_status: 200

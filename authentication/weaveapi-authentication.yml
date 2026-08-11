@@ -1,0 +1,119 @@
+generated: '2026-08-11'
+method: searched
+source: https://weaveapi.dev/docs/
+docs: https://weaveapi.dev/docs/
+
+summary:
+  types: [apiKey]
+  api_key_in: [header]
+  scheme: bearer
+  oauth2_flows: []
+  scopes_supported: false
+  note: >-
+    The WeaveAPI API itself has exactly one authentication mechanism: a bearer API key in the
+    Authorization header. There is no OAuth on the API surface, no scopes, no per-key permissions
+    documented, and no key-prefix convention published. The OAuth/OIDC/passkey machinery below belongs
+    to the hosted CONSOLE (human login), not to the API — the two are recorded separately because
+    conflating them would credit WeaveAPI with an API authorization model it does not have.
+
+api_authentication:
+  schemes:
+    - name: bearerAuth
+      type: http
+      scheme: bearer
+      in: header
+      parameter_name: Authorization
+      format: 'Authorization: Bearer YOUR_WEAVEAPI_KEY'
+      applies_to: All /v1 routes
+      source: https://weaveapi.dev/docs/
+      issued_via: Console → Token Management
+      rotation: >-
+        "Create and rotate API keys in the hosted console." Rotation is self-serve; no rotation policy,
+        key lifetime, or expiry is published.
+      scopes: []
+      key_prefix: null
+      key_prefix_note: >-
+        No test/live key prefix convention is documented, and no sandbox/test key mode exists — a
+        WeaveAPI key is a live key. Not published, not inferable without an account.
+  verified_behavior:
+    method: probed
+    fetched: '2026-08-11'
+    observations:
+      - request: GET https://api.weaveapi.dev/v1/models with no Authorization header
+        status: 401
+        body: '{"error":{"code":"","message":"Invalid token (request id: …)","type":"new_api_error"}}'
+      - request: GET https://api.weaveapi.dev/v1/models with an invalid bearer token
+        status: 401
+        body: '{"error":{"code":"","message":"Invalid token (request id: …)","type":"new_api_error"}}'
+        note: >-
+          A missing credential and a wrong credential are indistinguishable — both return the identical
+          401 "Invalid token". No WWW-Authenticate challenge header is returned on either.
+      - request: POST https://api.weaveapi.dev/v1/chat/completions with no Authorization header
+        status: 401
+    www_authenticate_header: false
+
+  anthropic_compatible_route:
+    base_url: https://api.weaveapi.dev
+    path: /v1/messages
+    auth: >-
+      Documented as the same WeaveAPI key. The Claude Code guide instructs the developer to set the base
+      URL WITHOUT /v1 because the client appends the messages path itself, and to place the key in the
+      CC Switch provider API Key field.
+    probed_status: 401
+    source: https://weaveapi.dev/docs/claude-code-cc-switch/
+
+# Console/account identity — human login to the hosted console. NOT API authorization.
+console_authentication:
+  method: probed
+  source: https://api.weaveapi.dev/api/status
+  host: https://console.weaveapi.dev
+  methods:
+    - type: password
+      enabled: true
+      registration_enabled: true
+      email_verification_required: true
+    - type: oauth2
+      provider: GitHub
+      enabled: true
+      note: GitHub OAuth login for the console.
+    - type: openIdConnect
+      provider: Google
+      enabled: true
+      authorization_endpoint: https://accounts.google.com/o/oauth2/v2/auth
+      note: Google OIDC login for the console.
+    - type: webauthn
+      name: passkey
+      enabled: true
+      relying_party_id: console.weaveapi.dev
+      display_name: WeaveAPI
+      user_verification: preferred
+      note: >-
+        Passkey / WebAuthn login is supported on the console. This is the strongest authentication
+        control WeaveAPI operates, and it is on the human surface only.
+  bot_protection:
+    provider: Cloudflare Turnstile
+    enabled: true
+  mfa_for_api_keys: false
+  mfa_note: >-
+    No MFA, IP allowlisting, or key-scoping is documented for API keys themselves. Account access can be
+    hardened with a passkey; the credential that actually calls the API cannot be.
+
+gaps:
+  - No scopes or per-key permissions — one key grants the account's full API surface.
+  - No key expiry, TTL, or documented rotation policy.
+  - No test/live key separation and no key prefix convention.
+  - No WWW-Authenticate challenge on 401.
+  - No /.well-known/oauth-authorization-server or /.well-known/oauth-protected-resource (both 404).
+  - Missing credential and invalid credential return identical responses.
+
+x-evidence:
+  - url: https://weaveapi.dev/docs/
+    http_status: 200
+  - url: https://api.weaveapi.dev/v1/models
+    http_status: 401
+  - url: https://api.weaveapi.dev/api/status
+    http_status: 200
+  - url: https://api.weaveapi.dev/.well-known/oauth-authorization-server
+    http_status: 404
+  - url: https://weaveapi.dev/docs/claude-code-cc-switch/
+    http_status: 200
