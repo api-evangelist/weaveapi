@@ -1,0 +1,176 @@
+accessModel:
+  pricing: paid
+  onboarding: self-serve
+  trial: true
+  try_now: false
+  public: false
+  label: Paid · Self-serve signup
+  confidence: high
+  source:
+    - https://weaveapi.dev/pricing/
+    - https://console.weaveapi.dev/register
+    - plans
+    - authentication
+  generated: '2026-08-11'
+  method: searched
+  note: >-
+    Standing model is prepaid pay-as-you-go credits — you must fund a balance before calling anything —
+    so pricing is `paid`, with trial true for the $1 signup testing credit. Signup is self-serve at the
+    console (password, GitHub or Google), but no endpoint is callable without a key, so public is false.
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/weaveapi.png
+name: WeaveAPI - OpenAI-compatible AI API Gateway
+description: >-
+  WeaveAPI is a hosted, OpenAI-wire-compatible inference gateway: one base URL
+  (https://api.weaveapi.dev/v1) and one bearer API key give access to model routes drawn from several
+  upstream families, while keys, prepaid balance, usage logs and top-ups are managed in a hosted
+  console. The pitch is drop-in substitution — keep an existing OpenAI SDK, change the base URL and the
+  key, and pick a model id from the console Model Marketplace. It also exposes an Anthropic-compatible
+  messages route, and publishes setup guides for Claude Code, Codex, OpenCode, OpenClaw, Claude Desktop
+  and Hermes via CC Switch. Billing is prepaid credits shared across every route, metered per model,
+  with a $1 signup testing credit and no subscription tiers. The gateway runs the open-source New API
+  platform. WeaveAPI publishes no OpenAPI or other machine-readable contract, no SDK of its own, no MCP
+  server, no status page and no changelog.
+url: https://weaveapi-openai-compatible-ai-api-gateway.apievangelist.com/apis.yml
+created: '2026-07-10'
+modified: '2026-08-11'
+specificationVersion: '0.21'
+tags:
+  - AI
+  - LLM
+  - AI inference
+  - API gateway
+  - aggregator
+  - OpenAI-compatible
+  - developer tools
+  - model routing
+  - LLM gateway
+  - prepaid credits
+  - agent tools
+  - model marketplace
+apis:
+  - name: WeaveAPI OpenAI-compatible API
+    description: >-
+      OpenAI-wire-compatible REST API for chat completions, responses-style requests and the model
+      catalog, authenticated with a bearer API key in the Authorization header. Three endpoints are
+      documented (POST /v1/chat/completions, POST /v1/responses, GET /v1/models); probing shows a
+      further dozen OpenAI-style routes registered on the gateway but undocumented. No OpenAPI is
+      published, so request and response schemas are inherited from the OpenAI wire format rather than
+      specified by WeaveAPI.
+    humanURL: https://weaveapi.dev/docs/
+    baseURL: https://api.weaveapi.dev/v1
+    tags:
+      - AI
+      - LLM
+      - AI inference
+      - API gateway
+      - aggregator
+      - OpenAI-compatible
+      - developer tools
+      - model routing
+    properties:
+      - type: Documentation
+        url: https://weaveapi.dev/docs/
+      - type: APIReference
+        url: https://weaveapi.dev/docs/#chat-completions
+      - type: GettingStarted
+        url: https://weaveapi.dev/docs/#quick-start
+      - type: Authentication
+        url: https://weaveapi.dev/docs/#api-keys
+      - type: Conventions
+        url: conventions/weaveapi-conventions.yml
+      - type: ErrorCatalog
+        url: errors/weaveapi-error-codes.yml
+      - type: RateLimits
+        url: rate-limits/weaveapi-rate-limits.yml
+  - name: WeaveAPI Anthropic-compatible Messages API
+    description: >-
+      Anthropic/Claude-wire-compatible messages route served from the bare api.weaveapi.dev host. The
+      Claude Code setup guide instructs clients to use the host WITHOUT /v1 because Claude-compatible
+      clients build the messages path themselves; the route resolves at POST /v1/messages and is
+      confirmed live and auth-gated. Uses the same WeaveAPI bearer key. No model in the public catalog
+      declares Anthropic endpoint support, so which routes answer here is not publicly verifiable.
+    humanURL: https://weaveapi.dev/docs/claude-code-cc-switch/
+    baseURL: https://api.weaveapi.dev
+    tags:
+      - AI
+      - LLM
+      - AI inference
+      - Anthropic-compatible
+      - agent tools
+      - model routing
+    properties:
+      - type: Documentation
+        url: https://weaveapi.dev/docs/claude-code-cc-switch/
+      - type: Authentication
+        url: authentication/weaveapi-authentication.yml
+maintainers:
+  - FN: WeaveAPI - OpenAI-compatible AI API Gateway
+    url: https://weaveapi.dev/
+    email: support@weaveapi.dev
+common:
+  - type: Website
+    url: https://weaveapi.dev/
+  - type: DeveloperPortal
+    url: https://console.weaveapi.dev/
+  - type: Documentation
+    url: https://weaveapi.dev/docs/
+  - type: APIReference
+    url: https://weaveapi.dev/docs/#chat-completions
+  - type: GettingStarted
+    url: https://weaveapi.dev/docs/#quick-start
+  - type: Support
+    url: https://weaveapi.dev/support/
+  - type: Pricing
+    url: https://weaveapi.dev/pricing/
+  - type: SignUp
+    url: https://console.weaveapi.dev/register
+  - type: Login
+    url: https://console.weaveapi.dev/login
+  - type: TermsOfService
+    url: https://weaveapi.dev/terms/
+  - type: PrivacyPolicy
+    url: https://weaveapi.dev/privacy/
+  - type: About
+    url: https://weaveapi.dev/about/
+  - type: Authentication
+    url: authentication/weaveapi-authentication.yml
+  - type: Conventions
+    url: conventions/weaveapi-conventions.yml
+  - type: ErrorCatalog
+    url: errors/weaveapi-error-codes.yml
+  - type: RateLimits
+    url: rate-limits/weaveapi-rate-limits.yml
+  - type: Plans
+    url: plans/weaveapi-plans-pricing.yml
+  - type: Lifecycle
+    url: lifecycle/weaveapi-lifecycle.yml
+  - type: Conformance
+    url: conformance/weaveapi-conformance.yml
+  - type: Packages
+    url: packages/weaveapi-packages.yml
+  - type: LLMsTxt
+    url: llms/weaveapi-llms.txt
+  - type: ContentSignal
+    url: well-known/weaveapi-content-signals.yml
+  - type: DomainSecurity
+    url: security/weaveapi-domain-security.yml
+generated:
+  by: apis.io/add
+  model: claude-opus-4-8
+  confidence: 85
+  at: '2026-07-10T05:46:24.844Z'
+x-enrichment:
+  date: '2026-08-11'
+  status: enriched
+  artifacts_added: 15
+  pass: local-v1
+x-base-url-check:
+  date: '2026-08-11'
+  verdict_from_tool: no-usable-base
+  accepted: false
+  reason: >-
+    repair-api-bases.py flagged api.weaveapi.dev as `nonprod-host`, which is a false positive on the
+    .dev TLD — weaveapi.dev is the company's production domain, not a development environment. The base
+    URL was verified live on 2026-08-11: GET https://api.weaveapi.dev/v1/models returns 401 with the
+    gateway's auth challenge, and the docs, about page, pricing page and all six agent setup guides name
+    https://api.weaveapi.dev/v1 as the base. Left unchanged.
