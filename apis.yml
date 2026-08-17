@@ -30,7 +30,7 @@ description: >-
   with a $1 signup testing credit and no subscription tiers. The gateway runs the open-source New API
   platform. WeaveAPI publishes no OpenAPI or other machine-readable contract, no SDK of its own, no MCP
   server, no status page and no changelog.
-url: https://weaveapi-openai-compatible-ai-api-gateway.apievangelist.com/apis.yml
+url: https://raw.githubusercontent.com/api-evangelist/weaveapi/refs/heads/main/apis.yml
 created: '2026-07-10'
 modified: '2026-08-11'
 specificationVersion: '0.21'
