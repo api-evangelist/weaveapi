@@ -35,6 +35,19 @@ created: '2026-07-10'
 modified: '2026-08-11'
 specificationVersion: '0.23'
 tags:
+  - Artificial Intelligence
+  - LLM
+  - AI Inference
+  - API Gateway
+  - Aggregator
+  - OpenAI-Compatible
+  - Developer Tools
+  - Model Routing
+  - LLM Gateway
+  - prepaid credits
+  - Agent Tools
+  - Model Marketplace
+tags_raw:
   - AI
   - LLM
   - AI inference
@@ -59,6 +72,15 @@ apis:
     humanURL: https://weaveapi.dev/docs/
     baseURL: https://api.weaveapi.dev/v1
     tags:
+      - Artificial Intelligence
+      - LLM
+      - AI Inference
+      - API Gateway
+      - Aggregator
+      - OpenAI-Compatible
+      - Developer Tools
+      - Model Routing
+    tags_raw:
       - AI
       - LLM
       - AI inference
@@ -92,6 +114,13 @@ apis:
     humanURL: https://weaveapi.dev/docs/claude-code-cc-switch/
     baseURL: https://api.weaveapi.dev
     tags:
+      - Artificial Intelligence
+      - LLM
+      - AI Inference
+      - Anthropic Compatible
+      - Agent Tools
+      - Model Routing
+    tags_raw:
       - AI
       - LLM
       - AI inference
