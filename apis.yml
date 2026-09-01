@@ -48,16 +48,16 @@ specificationVersion: '0.23'
 tags:
   - Artificial Intelligence
   - LLM
-  - AI inference
-  - API gateway
-  - aggregator
-  - OpenAI-compatible
+  - AI Inference
+  - API Gateway
+  - Aggregator
+  - OpenAI-Compatible
   - Developer Tools
-  - model routing
-  - LLM gateway
+  - Model Routing
+  - LLM Gateway
   - prepaid credits
-  - agent tools
-  - model marketplace
+  - Agent Tools
+  - Model Marketplace
 tags_raw:
   - AI
   - LLM
@@ -85,12 +85,12 @@ apis:
     tags:
       - Artificial Intelligence
       - LLM
-      - AI inference
-      - API gateway
-      - aggregator
-      - OpenAI-compatible
+      - AI Inference
+      - API Gateway
+      - Aggregator
+      - OpenAI-Compatible
       - Developer Tools
-      - model routing
+      - Model Routing
     tags_raw:
       - AI
       - LLM
@@ -127,10 +127,10 @@ apis:
     tags:
       - Artificial Intelligence
       - LLM
-      - AI inference
-      - Anthropic-compatible
-      - agent tools
-      - model routing
+      - AI Inference
+      - Anthropic Compatible
+      - Agent Tools
+      - Model Routing
     tags_raw:
       - AI
       - LLM
