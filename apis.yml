@@ -48,7 +48,7 @@ specificationVersion: '0.23'
 tags:
   - Artificial Intelligence
   - LLM
-  - AI Inference
+  - Inference
   - API Gateway
   - Aggregator
   - OpenAI-Compatible
@@ -71,6 +71,7 @@ tags_raw:
   - prepaid credits
   - agent tools
   - model marketplace
+  - AI Inference
 apis:
   - name: WeaveAPI OpenAI-compatible API
     description: >-
@@ -85,7 +86,7 @@ apis:
     tags:
       - Artificial Intelligence
       - LLM
-      - AI Inference
+      - Inference
       - API Gateway
       - Aggregator
       - OpenAI-Compatible
@@ -100,6 +101,7 @@ apis:
       - OpenAI-compatible
       - developer tools
       - model routing
+      - AI Inference
     properties:
       - type: Documentation
         url: https://weaveapi.dev/docs/
@@ -127,7 +129,7 @@ apis:
     tags:
       - Artificial Intelligence
       - LLM
-      - AI Inference
+      - Inference
       - Anthropic Compatible
       - Agent Tools
       - Model Routing
@@ -138,6 +140,7 @@ apis:
       - Anthropic-compatible
       - agent tools
       - model routing
+      - AI Inference
     properties:
       - type: Documentation
         url: https://weaveapi.dev/docs/claude-code-cc-switch/
