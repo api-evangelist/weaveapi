@@ -292,3 +292,22 @@ x-evidence:
     content_type: application/json
   - url: https://weaveapi.dev/refund/
     http_status: 200
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - negotiated
+  units: []
+  plans:
+  - name: Pay as you go
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods: []
+  - name: Account review
+    access: other
+    model: negotiated
+    model_how: derived
+    units: []
+    periods: []
