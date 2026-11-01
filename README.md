@@ -1,4 +1,4 @@
-# weaveapi-openai-compatible-ai-api-gateway
+# WeaveAPI - OpenAI-compatible AI API Gateway
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -64,4 +64,105 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-WeaveAPI is an OpenAI-compatible /v1 gateway for calling supported model families (OpenAI, Anthropic, DeepSeek, Qwen, Kimi, GLM, MiniMax) through a clean OpenAI-compatible API. Keep your SDK, change the base URL, and manage keys, balance, usage, and top-ups in a hosted console. Prepaid pay-as-you-go
+WeaveAPI is a hosted, OpenAI-wire-compatible inference gateway: one base URL (https://api.weaveapi.dev/v1) and one bearer API key give access to model routes drawn from several upstream families, while keys, prepaid balance, usage logs and top-ups are managed in a hosted console. The pitch is drop-in substitution — keep an existing OpenAI SDK, change the base URL and the key, and pick a model id from the console Model Marketplace. It also exposes an Anthropic-compatible messages route, and publishes setup guides for Claude Code, Codex, OpenCode, OpenClaw, Claude Desktop and Hermes via CC Switch. Billing is prepaid credits shared across every route, metered per model, with a $1 signup testing credit and no subscription tiers. The gateway runs the open-source New API platform. WeaveAPI publishes no OpenAPI or other machine-readable contract, no SDK of its own, no MCP server, no status page and no changelog.
+
+**Areas:** Artificial Intelligence · LLM · Inference · API Gateway · Aggregator · OpenAI-Compatible · Developer Tools · Model Routing · LLM Gateway · prepaid credits · Agent Tools · Model Marketplace
+
+## WeaveAPI - OpenAI-compatible AI API Gateway on APIs.io
+
+Everything profiled for WeaveAPI - OpenAI-compatible AI API Gateway is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/weaveapi/](https://apis.io/providers/weaveapi/)** — or go straight to one of the APIs or properties below.
+
+### APIs (2)
+
+- [WeaveAPI OpenAI-compatible API](https://apis.io/apis/weaveapi/weaveapi-openai-compatible-api/) — OpenAI-wire-compatible REST API for chat completions, responses-style requests and the model catalog, authenticated with a bearer API key in the…
+- [WeaveAPI Anthropic-compatible Messages API](https://apis.io/apis/weaveapi/weaveapi-anthropic-compatible-messages-api/) — Anthropic/Claude-wire-compatible messages route served from the bare api.weaveapi.dev host. The Claude Code setup guide instructs clients to use the host…
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Weaveapi Authentication](https://apis.io/security/weaveapi/weaveapi-authentication/)
+- [Weaveapi Domain Security](https://apis.io/security/weaveapi/weaveapi-domain-security/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Weaveapi Plans Pricing](https://apis.io/plans/weaveapi/weaveapi-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Weaveapi Rate Limits](https://apis.io/rate-limits/weaveapi/weaveapi-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://weaveapi.dev/)
+- [Documentation](https://weaveapi.dev/docs/)
+- [Getting started](https://weaveapi.dev/docs/#quick-start)
+- [API reference](https://weaveapi.dev/docs/#chat-completions)
+- [Pricing](https://weaveapi.dev/pricing/)
+- [Sign up](https://console.weaveapi.dev/register)
+- [Support](https://weaveapi.dev/support/)
+- [Terms of service](https://weaveapi.dev/terms/)
+- [Privacy policy](https://weaveapi.dev/privacy/)
+
+## API Evangelist rating
+
+**Kin Score 34.1** — thin · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 66.1 |
+| Contract quality | 0.0 |
+| Contract governance | 18.2 |
+| Operational transparency | 0.0 |
+| Developer ergonomics | 54.8 |
+| Access clarity | 65.8 |
+
+**Agent readiness 10.1** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | — |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | documented (partial credit) |
+| OpenAPI Examples | — |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | yes |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 22.7** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/weaveapi/](https://apis.io/providers/weaveapi/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for WeaveAPI - OpenAI-compatible AI API Gateway: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/weaveapi/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
